@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.gmail.at.boban.talevski.stormy18.Constants;
 import com.gmail.at.boban.talevski.stormy18.R;
 import com.gmail.at.boban.talevski.stormy18.Weather.Current;
+import com.gmail.at.boban.talevski.stormy18.Weather.Forecast;
 import com.gmail.at.boban.talevski.stormy18.databinding.ActivityMainBinding;
 
 import org.json.JSONException;
@@ -33,7 +34,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    private Current current;
+    private Forecast forecast;
 
     private ImageView iconImageView;
 
@@ -79,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
                         String jsonData = response.body().string();
                         Log.v(TAG, jsonData);
                         if (response.isSuccessful()) {
+                            forecast = parseForecastData(jsonData);
 
-                            current = getCurrentDetails(jsonData);
+                            Current current = forecast.getCurrent();
 
                             final Current displayWeather = new Current(
                                     current.getLocationLabel(),
@@ -120,6 +122,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private Forecast parseForecastData(String jsonData) throws JSONException {
+        Forecast forecast = new Forecast();
+
+        forecast.setCurrent(getCurrentDetails(jsonData));
+
+        return forecast;
+    }
+
     private Current getCurrentDetails(String jsonData) throws JSONException {
         JSONObject forecast = new JSONObject(jsonData);
 
@@ -128,8 +138,9 @@ public class MainActivity extends AppCompatActivity {
 
         JSONObject currently = forecast.getJSONObject("currently");
 
-        current = new Current();
+        Current current = new Current();
 
+        // Parse weather data from currently object
         current.setHumidity(currently.getDouble("humidity"));
         current.setTime(currently.getLong("time"));
         current.setIcon(currently.getString("icon"));
