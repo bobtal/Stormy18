@@ -18,8 +18,10 @@ import com.gmail.at.boban.talevski.stormy18.Constants;
 import com.gmail.at.boban.talevski.stormy18.R;
 import com.gmail.at.boban.talevski.stormy18.Weather.Current;
 import com.gmail.at.boban.talevski.stormy18.Weather.Forecast;
+import com.gmail.at.boban.talevski.stormy18.Weather.Hour;
 import com.gmail.at.boban.talevski.stormy18.databinding.ActivityMainBinding;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -126,8 +128,19 @@ public class MainActivity extends AppCompatActivity {
         Forecast forecast = new Forecast();
 
         forecast.setCurrent(getCurrentDetails(jsonData));
+        forecast.setHourlyForecast(getHourlyForecast(jsonData));
 
         return forecast;
+    }
+
+    private Hour[] getHourlyForecast(String jsonData) throws JSONException {
+        JSONObject forecast = new JSONObject(jsonData);
+        String timezone = forecast.getString("timezone");
+
+        JSONObject hourly = forecast.getJSONObject("hourly");
+        JSONArray data = hourly.getJSONArray("data");
+
+        return null;
     }
 
     private Current getCurrentDetails(String jsonData) throws JSONException {
