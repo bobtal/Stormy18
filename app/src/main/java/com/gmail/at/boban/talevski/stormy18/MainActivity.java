@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +34,17 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView iconImageView;
 
+    final double latitude = 37.8267;
+    final double longitude = -122.4233;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getForecast(latitude, longitude);
+        Log.d(TAG, "Main UI code is running, hurray!");
+    }
+
+    private void getForecast(double latitude, double longitude) {
         final ActivityMainBinding binding =
                 DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
@@ -43,9 +52,6 @@ public class MainActivity extends AppCompatActivity {
         darkSky.setMovementMethod(LinkMovementMethod.getInstance());
 
         iconImageView = findViewById(R.id.iconImageView);
-
-        double latitude = 37.8267;
-        double longitude = -122.4233;
 
         String forecastUrl = "https://api.darksky.net/forecast/"
                 + Constants.API_KEY + "/" + latitude + "," + longitude;
@@ -109,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.network_unavailable_message,
                     Toast.LENGTH_LONG).show();
         }
-        Log.d(TAG, "Main UI code is running, hurray!");
     }
 
     private CurrentWeather getCurrentDetails(String jsonData) throws JSONException {
@@ -152,5 +157,10 @@ public class MainActivity extends AppCompatActivity {
     private void alertUserAboutError() {
         AlertDialogFragment dialog = new AlertDialogFragment();
         dialog.show(getFragmentManager(), "error_dialog");
+    }
+
+    public void refreshOnClick(View view) {
+        Toast.makeText(this, "Refreshing data", Toast.LENGTH_LONG).show();
+        getForecast(latitude, longitude);
     }
 }
