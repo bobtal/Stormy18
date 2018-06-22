@@ -1,10 +1,12 @@
-package com.gmail.at.boban.talevski.stormy18;
+package com.gmail.at.boban.talevski.stormy18.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+
+import com.gmail.at.boban.talevski.stormy18.R;
 
 public class AlertDialogFragment extends DialogFragment {
     @Override
