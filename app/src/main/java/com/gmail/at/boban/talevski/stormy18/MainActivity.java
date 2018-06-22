@@ -2,12 +2,14 @@ package com.gmail.at.boban.talevski.stormy18;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +29,9 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-
     private CurrentWeather currentWeather;
+
+    private ImageView iconImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         TextView darkSky = findViewById(R.id.darkSkyAttribution);
         darkSky.setMovementMethod(LinkMovementMethod.getInstance());
+
+        iconImageView = findViewById(R.id.iconImageView);
 
         double latitude = 37.8267;
         double longitude = -122.4233;
@@ -68,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
                             currentWeather = getCurrentDetails(jsonData);
 
-                            CurrentWeather displayWeather = new CurrentWeather(
+                            final CurrentWeather displayWeather = new CurrentWeather(
                                     currentWeather.getLocationLabel(),
                                     currentWeather.getIcon(),
                                     currentWeather.getTime(),
@@ -80,6 +85,14 @@ public class MainActivity extends AppCompatActivity {
                             );
 
                             binding.setWeather(displayWeather);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Drawable drawable = getResources().getDrawable(displayWeather.getIconId());
+                                    iconImageView.setImageDrawable(drawable);
+                                }
+                            });
 
                         } else {
                             alertUserAboutError();
