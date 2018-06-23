@@ -27,6 +27,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,6 +40,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String HOURLY_FORECAST_KEY = "HourlyList";
     private Forecast forecast;
 
     private ImageView iconImageView;
@@ -209,7 +213,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void hourlyOnClick(View view) {
+        List<Hour> hours = Arrays.asList(forecast.getHourlyForecast());
+
         Intent intent = new Intent(this, HourlyForecastActivity.class);
+
+        intent.putExtra(HOURLY_FORECAST_KEY, (Serializable) hours);
         startActivity(intent);
     }
 }
